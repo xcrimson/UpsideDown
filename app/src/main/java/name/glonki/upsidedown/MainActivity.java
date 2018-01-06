@@ -15,6 +15,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final static int PERMISSION_REQUEST_CODE = 42;
     private final static IntentFilter statusIntentFilter = new IntentFilter(Constants.PICTURE_BROADCAST_ACTION);
+    private final static int MAX_PICTURE_SIDE = 1000;
 
     private PictureReceiver pictureReceiver;
     private EditText urlText;
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         String text = null;
         try {
             text = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-        } catch (Exception e) {
+        } catch (Throwable e) {
         }
         return text;
     }
@@ -117,8 +119,17 @@ public class MainActivity extends AppCompatActivity {
 
     public static Bitmap turnUpsideDown(Bitmap bitmap) {
         Matrix matrix = new Matrix();
+        if(bigBitmap(bitmap)) {
+            int bigSide = bitmap.getWidth() > bitmap.getHeight()? bitmap.getWidth() : bitmap.getHeight();
+            float scale = (float) MAX_PICTURE_SIDE / (float) (bigSide);
+            matrix.postScale(scale, scale);
+        }
         matrix.postRotate(180);
         return Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, false);
+    }
+
+    private static boolean bigBitmap(Bitmap bitmap) {
+        return bitmap.getWidth() > MAX_PICTURE_SIDE || bitmap.getHeight() > MAX_PICTURE_SIDE;
     }
 
     @Override
@@ -177,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         picture.setImageBitmap(turnUpsideDown(bitmap));
                         String url = intent.getStringExtra(Constants.PICTURE_URL);
                         PictureStorage.storeBitmap(MainActivity.this, url, bitmap);
+                        bitmap.recycle();
                         displayToast(R.string.picture_saved);
                     } catch (Exception e) {
                         if(PictureStorage.STORAGE_ERRORS.containsKey(e)) {
