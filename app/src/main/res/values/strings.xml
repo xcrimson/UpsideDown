@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">UpsideDown</string>
+    <string name="service_name">UpsideDown Service</string>
+    <string name="picture_url">Picture url</string>
+    <string name="download_and_turn_upside_down">Download and turn upside down</string>
+    <string name="invalid_url">Provided URL is not valid</string>
+    <string name="invalid_image">Could not load image. Please check the URL and internet connection.</string>
+    <string name="storage_not_writable">File was not saved because external storage is not writable</string>
+    <string name="cannot_create_dir">File was not saved because app directory could not be created</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="file_no_permission">File was not saved because write data permission is not granted</string>
+    <string name="saving_pictures_is_not_possible">Saving of downloaded pictures is not possible</string>
+    <string name="picture_saved">Picture saved to \'Pictures\\UpsideDown\'</string>
+    <string name="permissions_needed_dialog_title">Permission request</string>
+    <string name="permissions_needed_dialog_text">This application needs permission to store downloaded pictures</string>
+</resources>
